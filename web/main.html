@@ -15,7 +15,7 @@
     <script type="text/javascript">
       info = [];
       async function getInfo() {
-        info = await eel.getSysInfo()();
+        info = await eel.getsysinfo()();
         getOSName();
         getOSRelease();
         getOVPNStatus();
@@ -35,7 +35,7 @@
       }
 
       async function getListConf(){
-        var data = await eel.getOVPNListFiles()()
+        var data = await eel.getovpnlistfiles()()
         var list_conf = undefined;
         list_conf = document.getElementById('list_conf');
         
@@ -46,11 +46,21 @@
           list_conf.appendChild(option)
         }
       }
+
+      function getSelectedConfig(){
+
+      }
+
+      async function getPublicIp(){
+        var ip_addr = '';
+        ip_addr = await eel.checkpublicip()();
+        document.getElementById('current_ip').innerHTML = ip_addr;
+      }
     </script>
   </head>
   <body onload="getInfo()">
     <div class="container">
-      <h1 class="h1 text-success text-center">
+      <h1 class="h1 text-success text-center mt-3">
         Simple OpenVPN Manager for Linux
       </h1>
       <div class="accordion accordion-flush" id="accordionFlushExample">
@@ -181,6 +191,7 @@
                       <button class="btn btn-success btn-sm">
                         <i class="fas fa-check-circle"></i>
                       </button>
+                    </td>
                   </tr>
                   <tr>
                     <th scope="row">Connection</th>
@@ -199,6 +210,17 @@
                     <th scope="row">Current IP</th>
                     <td>:</td>
                     <td id="current_ip"></td>
+                    <td class="text-center">
+                      <button
+                        class="btn btn-outline-warning btn-sm"
+                        onclick="getPublicIp()"
+                      >
+                        <i class="fas fa-sync"></i>
+                      </button>
+                      <button class="btn btn-success btn-sm">
+                        <i class="fas fa-check-circle"></i>
+                      </button>
+                    </td>
                   </tr>
                 </tbody>
               </table>
