@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Simple OpenVPN Manager for Linux</title>
+    <!-- Fontawesome 6 -->
+    <link href="fontawesome/css/fontawesome.min.css" rel="stylesheet" />
+    <link href="fontawesome/css/solid.css" rel="stylesheet" />
+    <!-- Bootstrap 5 -->
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <!-- import Eel.js -->
+    <script type="text/javascript" src="/eel.js"></script>
+    <script type="text/javascript">
+      info = [];
+      async function getInfo() {
+        info = await eel.getSysInfo()();
+        getOSName();
+        getOSRelease();
+        getOVPNStatus();
+        getListConf();
+      }
+
+      function getOSName() {
+        document.getElementById("os_name").innerHTML = info[0];
+      }
+
+      function getOSRelease() {
+        document.getElementById("os_release").innerHTML = info[1];
+      }
+
+      function getOVPNStatus() {
+        document.getElementById("openvpn_installation_status").innerHTML = info[2];
+      }
+
+      async function getListConf(){
+        var data = await eel.getOVPNListFiles()()
+        var list_conf = undefined;
+        list_conf = document.getElementById('list_conf');
+        
+        for (let i = 0; i < data.length; i++) {
+          var option = document.createElement("option");
+          option.innerHTML = data[i]
+          option.value = data[i]
+          list_conf.appendChild(option)
+        }
+      }
+    </script>
+  </head>
+  <body onload="getInfo()">
+    <div class="container">
+      <h1 class="h1 text-success text-center">
+        Simple OpenVPN Manager for Linux
+      </h1>
+      <div class="accordion accordion-flush" id="accordionFlushExample">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="flush-headingOne">
+            <button
+              class="accordion-button collapsed"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#flush-collapseOne"
+              aria-expanded="false"
+              aria-controls="flush-collapseOne"
+            >
+              OpenVPN Installation Status
+            </button>
+          </h2>
+          <div
+            id="flush-collapseOne"
+            class="accordion-collapse collapse show"
+            aria-labelledby="flush-headingOne"
+            data-bs-parent="#accordionFlushExample"
+          >
+            <div class="accordion-body">
+              <table class="table table-hover">
+                <thead>
+                  <tr class="text-center">
+                    <th></th>
+                    <th></th>
+                    <th>Information</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">Operating System</th>
+                    <td>:</td>
+                    <td id="os_name"></td>
+                    <td class="text-center">
+                      <button
+                        class="btn btn-outline-warning btn-sm"
+                        onclick="getOSName()"
+                      >
+                        <i class="fas fa-sync"></i>
+                      </button>
+                      <button class="btn btn-outline-success btn-sm">
+                        <i class="fas fa-copy"></i>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">OS Release</th>
+                    <td>:</td>
+                    <td id="os_release"></td>
+                    <td class="text-center">
+                      <button
+                        class="btn btn-outline-warning btn-sm"
+                        onclick="getOSRelease()"
+                      >
+                        <i class="fas fa-sync"></i>
+                      </button>
+                      <button class="btn btn-outline-success btn-sm">
+                        <i class="fas fa-copy"></i>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">OpenVPN Installation</th>
+                    <td>:</td>
+                    <td id="openvpn_installation_status"></td>
+                    <td class="text-center">
+                      <button class="btn btn-outline-warning btn-sm">
+                        <i class="fas fa-sync"></i>
+                      </button>
+                      <button class="btn btn-outline-success btn-sm">
+                        <i class="fas fa-copy"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="flush-headingTwo">
+            <button
+              class="accordion-button collapsed"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#flush-collapseTwo"
+              aria-expanded="false"
+              aria-controls="flush-collapseTwo"
+            >
+              OpenVPN Manager
+            </button>
+          </h2>
+          <div
+            id="flush-collapseTwo"
+            class="accordion-collapse collapse"
+            aria-labelledby="flush-headingTwo"
+            data-bs-parent="#accordionFlushExample"
+          >
+            <div class="accordion-body">
+              <table class="table table-hover">
+                <thead>
+                  <tr class="text-center">
+                    <th></th>
+                    <th></th>
+                    <th>Information</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">.ovpn File</th>
+                    <td>:</td>
+                    <td>
+                      <select id="list_conf">
+                      </select>
+                    </td>
+                    <td class="text-center">
+                      <button
+                        class="btn btn-outline-warning btn-sm"
+                        onclick="getListConf()"
+                      >
+                        <i class="fas fa-sync"></i>
+                      </button>
+                      <button class="btn btn-success btn-sm">
+                        <i class="fas fa-check-circle"></i>
+                      </button>
+                  </tr>
+                  <tr>
+                    <th scope="row">Connection</th>
+                    <td>:</td>
+                    <td id="conn_status">Not Conencted!</td>
+                    <td class="text-center">
+                      <button class="btn btn-primary btn-sm">
+                        <i class="fas fa-plug"></i>
+                      </button>
+                      <button class="btn btn-outline-danger btn-sm disabled">
+                        <i class="fas fa-power-off"></i>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Current IP</th>
+                    <td>:</td>
+                    <td id="current_ip"></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
