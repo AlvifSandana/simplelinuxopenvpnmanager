@@ -25,17 +25,33 @@
 #
 # proc = subprocess.Popen(["sudo", "openvpn3" ,"session-start", "--config", "/home/alvif/PycharmProjects/linuxopenvpnmanager/config_dir/server5-VPNSplit.com.ovpn"], stdout=subprocess.PIPE, text=True)
 # # proc.communicate(input=b'vpnsplit.com-100470492502109\n240800')
-import requests
+# import requests
+#
+#
+# def checkpublicip():
+#     try:
+#         url = 'https://ipinfo.io/ip'
+#         request = requests.get(url)
+#         ip_addr = request.text
+#         print(ip_addr)
+#     except Exception as error:
+#         print(error)
+#
+#
+# checkpublicip()
+import os
+import subprocess
 
-
-def checkpublicip():
+def getovpnlistfiles():
+    global list_conf
     try:
-        url = 'https://ipinfo.io/ip'
-        request = requests.get(url)
-        ip_addr = request.text
-        print(ip_addr)
+        conf_dir = os.getcwd() + '/config_dir'
+        list_proc = subprocess.Popen(["find", f"{conf_dir}", "-iname", "*.ovpn"], stdout=subprocess.PIPE, text=True)
+        stdout = list_proc.communicate()[0]
+        list_conf = stdout.split(conf_dir + '/')
+        print(list_conf)
     except Exception as error:
         print(error)
+    return list_conf
 
-
-checkpublicip()
+getovpnlistfiles()
