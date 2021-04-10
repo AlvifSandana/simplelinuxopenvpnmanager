@@ -5,7 +5,7 @@ import requests
 import subprocess
 
 # initiate eel
-eel.init('web', allowed_extensions=['.js', '.html'])
+eel.init('web', allowed_extensions=['.js', '.html'], size=[800, 600])
 
 
 # expose python functions
