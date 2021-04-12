@@ -5,7 +5,7 @@ import requests
 import subprocess
 
 # initiate eel
-eel.init('web', allowed_extensions=['.js', '.html'], size=[800, 600])
+eel.init('web', allowed_extensions=['.js', '.html'])
 
 
 # expose python functions
@@ -37,7 +37,6 @@ def getovpnlistfiles():
         list_proc = subprocess.Popen(["find", f"{conf_dir}", "-iname", "*.ovpn"], stdout=subprocess.PIPE, text=True)
         stdout = list_proc.communicate()[0]
         list_conf = stdout.split(conf_dir + '/')
-        print(list_conf)
     except Exception as error:
         print(error)
     return list_conf
@@ -51,11 +50,12 @@ def connectvpn(config_name):
 @eel.expose
 def checkpublicip():
     try:
-        url = 'https://ipinfo.io/ip'
+        url = 'https://ipapi.co/json'
         request = requests.get(url)
-        ip_addr = request.text
-        if ip_addr != '' or ip_addr is not None:
-            return ip_addr
+        ip_info = request.json()
+        result = [ip_info['ip'], ip_info['country_name']]
+        if ip_info != '' or ip_info is not None:
+            return result
         else:
             return '127.0.0.1'
     except Exception as error:

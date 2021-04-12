@@ -1,3 +1,7 @@
+body{
+    background: #4D5057;
+}
+
 .btn-refresh{
     background-image: url('../img/refresh-ccw.svg');
 }

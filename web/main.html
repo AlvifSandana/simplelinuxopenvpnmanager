@@ -20,6 +20,7 @@
         getOSRelease();
         getOVPNStatus();
         getListConf();
+        getPublicIp();
       }
 
       function getOSName() {
@@ -54,7 +55,7 @@
       async function getPublicIp(){
         var ip_addr = '';
         ip_addr = await eel.checkpublicip()();
-        document.getElementById('current_ip').innerHTML = ip_addr;
+        document.getElementById('current_ip').innerHTML =  `${ip_addr[0]} (${ip_addr[1]})`;
       }
     </script>
   </head>
@@ -216,9 +217,6 @@
                         onclick="getPublicIp()"
                       >
                         <i class="fas fa-sync"></i>
-                      </button>
-                      <button class="btn btn-success btn-sm">
-                        <i class="fas fa-check-circle"></i>
                       </button>
                     </td>
                   </tr>

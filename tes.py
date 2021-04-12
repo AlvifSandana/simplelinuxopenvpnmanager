@@ -39,19 +39,31 @@
 #
 #
 # checkpublicip()
-import os
-import subprocess
+# import os
+# import subprocess
+#
+# def getovpnlistfiles():
+#     global list_conf
+#     try:
+#         conf_dir = os.getcwd() + '/config_dir'
+#         list_proc = subprocess.Popen(["find", f"{conf_dir}", "-iname", "*.ovpn"], stdout=subprocess.PIPE, text=True)
+#         stdout = list_proc.communicate()[0]
+#         list_conf = stdout.split(conf_dir + '/')
+#         print(list_conf)
+#     except Exception as error:
+#         print(error)
+#     return list_conf
+#
+# getovpnlistfiles()
+import requests
 
-def getovpnlistfiles():
-    global list_conf
-    try:
-        conf_dir = os.getcwd() + '/config_dir'
-        list_proc = subprocess.Popen(["find", f"{conf_dir}", "-iname", "*.ovpn"], stdout=subprocess.PIPE, text=True)
-        stdout = list_proc.communicate()[0]
-        list_conf = stdout.split(conf_dir + '/')
-        print(list_conf)
-    except Exception as error:
-        print(error)
-    return list_conf
 
-getovpnlistfiles()
+def getip():
+    url = 'https://ipapi.co/json'
+    request = requests.get(url)
+    anu = request.json()
+    print(f"ip: {anu['ip']}")
+    print(f"negara: {anu['country_name']}")
+
+
+getip()
