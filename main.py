@@ -24,7 +24,7 @@ def getovpnstatus():
     if check.poll() != 0:
         message = 'Not Installed'
     else:
-        message = f'Installed ({result})'
+        message = f'Installed'
     return message
 
 
@@ -53,11 +53,11 @@ def checkpublicip():
         url = 'https://ipapi.co/json'
         request = requests.get(url)
         ip_info = request.json()
-        result = [ip_info['ip'], ip_info['country_name']]
+        result = [ip_info['ip'], ip_info['country_name'], 'connected']
         if ip_info != '' or ip_info is not None:
             return result
         else:
-            return '127.0.0.1'
+            return ['127.0.0.1', 'unavailable', 'unavailable']
     except Exception as error:
         print(error)
 
@@ -65,6 +65,6 @@ def checkpublicip():
 # run
 if __name__ == '__main__':
     try:
-        eel.start('main.html', host='localhost', port=27000, size=(800, 480))
+        eel.start('main_app.html', host='localhost', port=27000, size=(1000, 480))
     except Exception as e:
         print(e)

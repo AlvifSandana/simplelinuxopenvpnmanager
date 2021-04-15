@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Fontawesome 6 -->
+    <link href="fontawesome/css/fontawesome.min.css" rel="stylesheet" />
+    <link href="fontawesome/css/solid.css" rel="stylesheet" />
+    <!-- Bootstrap 5 -->
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <!-- title -->
+    <title>Simple OpenVPN Manager for Linux</title>
+    <script type="text/javascript" src="/eel.js"></script>
+    <script type="text/javascript">
+      let info = [];
+
+      async function getInfo() {
+        info = await eel.getsysinfo()();
+        getOSRelease();
+        getOVPNStatus();
+        getListConf();
+        checkIP();
+      }
+
+      function getOSRelease() {
+        document.getElementById("os_release").innerHTML = info[1];
+      }
+
+      function getOVPNStatus() {
+        document.getElementById("openvpn_installation_status").innerHTML =
+          info[2];
+      }
+
+      async function getListConf() {
+        var data = await eel.getovpnlistfiles()();
+        var list_conf = undefined;
+        list_conf = document.getElementById("list_conf");
+
+        for (let i = 0; i < data.length; i++) {
+          var option = document.createElement("option");
+          option.innerHTML = data[i];
+          option.value = data[i];
+          list_conf.appendChild(option);
+        }
+      }
+      function selectConfig() {}
+
+      async function checkIP(){
+          let ip = '';
+          ip = await eel.checkpublicip()();
+          document.getElementById('ip').innerHTML = ip[0];
+          document.getElementById('country').innerHTML = ip[1];
+          if (ip[2] == 'connected'){
+            document.getElementById('inet_status').style.color = "green";
+          }else{
+            document.getElementById('inet_status').style.color = "yellow";
+          }
+          document.getElementById('inet_status').innerHTML = ip[2];
+      }
+    </script>
+  </head>
+  <body onload="getInfo()">
+    <div class="container">
+      <div class="title text-center mt-4 mb-4">
+        <h1 class="h4 text-warning">Simple OpenVPN Manager for Linux</h1>
+      </div>
+      <div class="d-flex justify-content-center">
+        <div class="col-4 mt-3">
+          <div class="container-info text-center rounded p-2">
+            <i class="fas fa-info-circle fa-4x text-white"></i>
+            <p class="mt-2 text-white mb-3">System Information</p>
+            <table class="table table-borderless text-start text-white">
+              <tbody>
+                <tr>
+                  <td>Release</td>
+                  <td>:</td>
+                  <td id="os_release">none</td>
+                </tr>
+                <tr>
+                  <td>OpenVPN</td>
+                  <td>:</td>
+                  <td id="openvpn_installation_status">none</td>
+                </tr>
+                <tr>
+                  <td>Internet</td>
+                  <td>:</td>
+                  <td id="inet_status">none</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="col-4 mt-3">
+          <div class="container-config text-center rounded p-2">
+            <i class="fas fa-file fa-4x text-white"></i>
+            <p class="mt-2 text-white mb-3">Config File</p>
+            <select class="form-select" id="list_conf"></select>
+            <div class="input-group input-group-sm mt-3">
+                <span class="input-group-text">Username</span>
+                <input type="text" id="username" class="form-control">
+            </div>
+            <div class="input-group input-group-sm mt-2">
+                <span class="input-group-text">Password</span>
+                <input type="password" id="username" class="form-control">
+            </div>
+            <button
+              class="btn btn-primary rounded-pill mt-3"
+              onclick="selectConfig()"
+            >
+              Set configuration
+            </button>
+          </div>
+        </div>
+        <div class="col-4 mt-3">
+          <div class="container-connection text-center rounded p-2">
+            <i class="fas fa-plug fa-4x text-white"></i>
+            <p class="mt-2 text-white mb-3">Connection</p>
+            <table class="table table-borderless text-start text-white">
+                <tbody>
+                    <tr>
+                        <td>IP</td>
+                        <td>:</td>
+                        <td id="ip"></td>
+                    </tr>
+                    <tr>
+                        <td>Country</td>
+                        <td>:</td>
+                        <td id="country"></td>
+                    </tr>
+                    <tr>
+                        <td>VPN status</td>
+                        <td>:</td>
+                        <td id="conn_status">disconnect</td>
+                    </tr>
+                </tbody>
+            </table>
+            <button class="btn btn-warning rounded-pill">Connect</button>
+          </div>
+        </div>
+      </div>
+      <!-- <button class="btn btn-white act-btn rounded-circle">
+        ?
+      </button> -->
+      <i class="fas fa-info-circle fa-2x act-btn"></i>
+    </div>
+  </body>
+</html>
